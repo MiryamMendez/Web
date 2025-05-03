@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Paciente - VITALSOFT</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+        }
+        .sidebar .nav-link {
+            color: #ecf0f1;
+            border-radius: 0;
+            margin-bottom: 5px;
+            padding: 10px 20px;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+        }
+        .sidebar .nav-link.active {
+            background-color: #3498db;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .user-info {
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 15px;
+        }
+        .btn-agendar {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        /* Estilos adicionales para mejorar la experiencia de usuario */
+        .cita-item, .consulta-item {
+            transition: background-color 0.2s;
+        }
+        .cita-item:hover, .consulta-item:hover {
+            background-color: #f8f9fa;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        /* Estilos para pantallas pequeñas */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: static;
+                height: auto;
+                margin-bottom: 20px;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div class="logo">VITALSOFT</div>
+        <div class="user-info">
+            <h6>Juan Pérez</h6>
+            <p class="small text-muted mb-0">Paciente</p>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" id="nav-dashboard">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-citas">
+                    <i class="bi bi-calendar-check"></i> Mis Citas
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-historial">
+                    <i class="bi bi-clipboard2-pulse"></i> Historial Médico
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-perfil">
+                    <i class="bi bi-person"></i> Mi Perfil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="#" id="nav-logout">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+        <!-- Dashboard -->
+        <div id="dashboard-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Dashboard del Paciente</h4>
+                <button class="btn btn-agendar" id="btn-nueva-cita">
+                    <i class="bi bi-plus-circle"></i> Nueva Cita
+                </button>
+            </div>
+
+            <div class="row">
+                <!-- Resumen de Citas -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-calendar"></i> Próximas Citas
+                        </div>
+                        <div class="card-body">
+                            <div class="cita-item p-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6>Dr. Carlos Rodríguez - Medicina General</h6>
+                                        <p class="text-muted mb-0">Mayo 2, 2025 - 10:00 AM</p>
+                                    </div>
+                                    <span class="badge bg-primary">Programada</span>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-secondary me-1">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cita-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6>Dra. María López - Cardiología</h6>
+                                        <p class="text-muted mb-0">Mayo 15, 2025 - 3:00 PM</p>
+                                    </div>
+                                    <span class="badge bg-primary">Programada</span>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-secondary me-1">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-sm btn-outline-primary" id="ver-todas-citas">Ver todas</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultas Recientes -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-clipboard2-pulse"></i> Consultas Recientes
+                        </div>
+                        <div class="card-body">
+                            <div class="consulta-item p-3 border-bottom">
+                                <h6>Dr. Carlos Rodríguez - Medicina General</h6>
+                                <p class="text-muted">Abril 15, 2025</p>
+                                <p>Diagnóstico: Resfriado común</p>
+                                <a href="#" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#consultaDetalleModal" data-consulta-id="1">Ver detalles</a>
+                            </div>
+                            <div class="consulta-item p-3">
+                                <h6>Dra. Ana Martínez - Dermatología</h6>
+                                <p class="text-muted">Abril 3, 2025</p>
+                                <p>Diagnóstico: Dermatitis</p>
+                                <a href="#" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#consultaDetalleModal" data-consulta-id="2">Ver detalles</a>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-sm btn-outline-primary" id="ver-historial">Ver historial</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen de salud -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-heart-pulse"></i> Resumen de Salud
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <h5>Presión Arterial</h5>
+                                    <h3 class="text-primary">120/80</h3>
+                                    <p class="text-muted">Última medición: Abril 15, 2025</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h5>Peso</h5>
+                                    <h3 class="text-primary">75 kg</h3>
+                                    <p class="text-muted">Última medición: Abril 15, 2025</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h5>Nivel de Glucosa</h5>
+                                    <h3 class="text-primary">95 mg/dl</h3>
+                                    <p class="text-muted">Última medición: Abril 15, 2025</p>
+                                </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Ver indicadores completos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones ocultas para la navegación -->
+        <div id="citas-content" style="display: none;">
+            <!-- Contenido de Citas -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Mis Citas</h4>
+                <button class="btn btn-agendar" id="btn-nueva-cita-2">
+                    <i class="bi bi-plus-circle"></i> Nueva Cita
+                </button>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="filtro-estado" class="form-label">Estado</label>
+                            <select class="form-select" id="filtro-estado">
+                                <option value="todas">Todas</option>
+                                <option value="programada">Programadas</option>
+                                <option value="realizada">Realizadas</option>
+                                <option value="cancelada">Canceladas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="filtro-especialidad" class="form-label">Especialidad</label>
+                            <select class="form-select" id="filtro-especialidad">
+                                <option value="todas">Todas</option>
+                                <option value="medicina-general">Medicina General</option>
+                                <option value="cardiologia">Cardiología</option>
+                                <option value="dermatologia">Dermatología</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="filtro-fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="filtro-fecha">
+                        </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button class="btn btn-primary" id="aplicar-filtros">Aplicar Filtros</button>
+                        <button class="btn btn-outline-secondary" id="limpiar-filtros">Limpiar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabla de citas -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fecha y Hora</th>
+                                    <th>Médico</th>
+                                    <th>Especialidad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mayo 2, 2025 - 10:00 AM</td>
+                                    <td>Dr. Carlos Rodríguez</td>
+                                    <td>Medicina General</td>
+                                    <td><span class="badge bg-primary">Programada</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary me-1">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger me-1">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mayo 15, 2025 - 3:00 PM</td>
+                                    <td>Dra. María López</td>
+                                    <td>Cardiología</td>
+                                    <td><span class="badge bg-primary">Programada</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary me-1">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger me-1">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Abril 15, 2025 - 11:00 AM</td>
+                                    <td>Dr. Carlos Rodríguez</td>
+                                    <td>Medicina General</td>
+                                    <td><span class="badge bg-success">Realizada</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Abril 3, 2025 - 4:00 PM</td>
+                                    <td>Dra. Ana Martínez</td>
+                                    <td>Dermatología</td>
+                                    <td><span class="badge bg-success">Realizada</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Paginación">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div id="historial-content" style="display: none;">
+            <!-- Contenido de Historial Médico -->
+            <h4 class="mb-4">Mi Historial Médico</h4>
+            
+            <!-- Filtros -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="hist-filtro-especialidad" class="form-label">Especialidad</label>
+                            <select class="form-select" id="hist-filtro-especialidad">
+                                <option value="todas">Todas</option>
+                                <option value="medicina-general">Medicina General</option>
+                                <option value="cardiologia">Cardiología</option>
+                                <option value="dermatologia">Dermatología</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="hist-filtro-desde" class="form-label">Desde</label>
+                            <input type="date" class="form-control" id="hist-filtro-desde">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="hist-filtro-hasta" class="form-label">Hasta</label>
+                            <input type="date" class="form-control" id="hist-filtro-hasta">
+                        </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button class="btn btn-primary" id="hist-aplicar-filtros">Aplicar Filtros</button>
+                        <button class="btn btn-outline-secondary" id="hist-limpiar-filtros">Limpiar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historial de consultas -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-clipboard2-pulse"></i> Consultas Médicas
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="consultasAccordion">
+                        <!-- Consulta 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#consulta1">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div><strong>Dr. Carlos Rodríguez - Medicina General</strong></div>
+                                        <div class="text-muted">Abril 15, 2025</div>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="consulta1" class="accordion-collapse collapse show" data-bs-parent="#consultasAccordion">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h6>Diagnóstico</h6>
+                                            <p>Resfriado común</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Síntomas</h6>
+                                            <p>Congestión nasal, dolor de garganta, fiebre leve</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <h6>Tratamiento</h6>
+                                            <ul>
+                                                <li>Paracetamol 500mg cada 8 horas por 3 días</li>
+                                                <li>Descanso y abundante líquido</li>
+                                                <li>Solución salina nasal</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h6>Notas adicionales</h6>
+                                            <p>Regresar si los síntomas persisten por más de 5 días o si la fiebre aumenta.</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-sm btn-outline-primary">Descargar receta</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Consulta 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#consulta2">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div><strong>Dra. Ana Martínez - Dermatología</strong></div>
+                                        <div class="text-muted">Abril 3, 2025</div>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="consulta2" class="accordion-collapse collapse" data-bs-parent="#consultasAccordion">
+                                <div class="accordion-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h6>Diagnóstico</h6>
+                                            <p>Dermatitis</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Síntomas</h6>
+                                            <p>Enrojecimiento, picazón y sequedad en la piel del antebrazo</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <h6>Tratamiento</h6>
+                                            <ul>
+                                                <li>Crema con corticosteroides de baja potencia, 2 veces al día por 7 días</li>
+                                                <li>Hidratante sin fragancia después de cada ducha</li>
+                                                <li>Evitar detergentes fuertes y usar ropa de algodón</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h6>Notas adicionales</h6>
+                                            <p>Se recomienda control en 2 semanas para evaluar la evolución.</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-sm btn-outline-primary">Descargar receta</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Exámenes médicos -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-file-earmark-medical"></i> Exámenes Médicos
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo de examen</th>
+                                    <th>Solicitado por</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Abril 15, 2025</td>
+                                    <td>Análisis de sangre general</td>
+                                    <td>Dr. Carlos Rodríguez</td>
+                                    <td><span class="badge bg-success">Completado</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-download"></i> Descargar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Abril 3, 2025</td>
+                                    <td>Radiografía de tórax</td>
+                                    <td>Dra. María López</td>
+                                    <td><span class="badge bg-success">Completado</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-download"></i> Descargar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mayo 5, 2025</td>
+                                    <td>Electrocardiograma</td>
+                                    <td>Dra. María López</td>
+                                    <td><span class="badge bg-warning">Pendiente</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>
+                                            <i class="bi bi-download"></i> Descargar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="perfil-content" style="display: none;">
+            <!-- Contenido de Perfil -->
+            <h4 class="mb-4">Mi Perfil</h4>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <img src="/api/placeholder/150/150" alt="Foto de perfil" class="rounded-circle mb-3" style="width: 150px; height: 150px;">
+                            <h5>Juan Pérez</h5>
+                            <p class="text-muted">ID Paciente: PAC-12345</p>
+                            <button class="btn btn-outline-primary mt-2">
+                                <i class="bi bi-camera"></i> Cambiar foto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-person"></i> Información Personal
+                        </div>
+                        <div class="card-body">
+                            <form id="perfilForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nombre" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" value="Juan">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="apellido" class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" id="apellido" value="Pérez">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control" id="fechaNacimiento" value="1985-08-15">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="genero" class="form-label">Género</label>
+                                        <select class="form-select" id="genero">
+                                            <option value="masculino" selected>Masculino</option>
+                                            <option value="femenino">Femenino</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" value="juan.perez@example.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="telef
